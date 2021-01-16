@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<script src="https://unpkg.com/vue"></script>
+    <link rel="stylesheet" href="styles.css" media="screen">
     <meta charset="UTF-8">
     <title>Path Light Pro</title>
 </head>
@@ -22,7 +24,7 @@
     </ul>
 </nav>
 <hr>
-<form action="/action_page.php">
+<section>
     <label for="employees">Employee:</label>
     <select name="employees" id="employees">
         <option value="sloane">Sloane</option>
@@ -31,13 +33,33 @@
         <option value="ginny">Ginny</option>
     </select>
     <br><br>
-    <input type="submit" value="Submit">
-</form>
+    <input type="button" value="Submit" onclick="populateTable()">
+	<script src="rainLog.js"></script>
+</section>
+<article>
+    <br>
+    <div id="app">
+	<table>
+		<tr>
+			<th>Site</th>
+			<th>1/13/2021</th>
+			<th>1/14/2021</th>
+			<th>1/15/2021</th>
+		</tr>
+     <tr v-for="row in teamRows" :key="row.team">
+       <td>{{ row.team }}</td>
+       <td v-for="time in row.times">{{ time }}</td>
+     </tr>
+	</table>
+    </div>
+    <script src="rainLog.js"></script>
+	
+</article>
 <footer>
     <hr>
     <p>
         <!-- Ending credits -->
-        Written by Jake Stephens Inc. 2020
+        Written by Jake Stephens Inc. 2021
     </p>
 </footer>
 </body>

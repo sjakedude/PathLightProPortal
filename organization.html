@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://unpkg.com/vue"></script>
+    <!-- CSS refrences -->
+    <link rel="stylesheet" href="css/organization-styles.css" media="screen">
+    <link rel="stylesheet" href="styles.css" media="screen">
+    <meta charset="UTF-8">
+    <title>Jaketopia</title>
+</head>
+<body>
+<header>
+    <!-- Title of the page -->
+    <h1>Organization</h1>
+</header>
+<header>
+    <!-- Brief description of the page's contents -->
+    <p>A simple place to keep track of the things you have to do</p>
+</header>
+<!-- Profile image with brief description -->
+<article>
+    <br>
+    <div id="app">
+	<table>
+		<tr>
+			<th>Site</th>
+			<th>1/13/2021</th>
+			<th>1/14/2021</th>
+			<th>1/15/2021</th>
+		</tr>
+     <tr v-for="row in teamRows" :key="row.team">
+       <td>{{ row.team }}</td>
+       <td v-for="time in row.times">{{ time }}</td>
+     </tr>
+	</table>
+    </div>
+    <script src="todoList.js"></script>
+	
+</article>
+<footer>
+    <hr>
+    <p>
+        <!-- Ending credits -->
+        Written by Jake Stephens Inc. 2020
+    </p>
+</footer>
+</body>
+</html>
