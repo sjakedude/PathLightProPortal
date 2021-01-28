@@ -18,22 +18,47 @@ admin.initializeApp();
 // Firestore
 const db = admin.firestore();
 
+const cityRef = db.collection('cities').doc('BJ');
+
 
 
 exports.populateWeather = functions.https.onRequest(async (request, response) => {
     const weatherAPIKey = "a77d00cf8cb244f4801195048211101";
+    var date = "2021-01-22";
+
     var regions = await getRegions();
     for (region in regions) {
         var sites = await getSites(region);
         // Get coordinates from sites/{siteID}
+        for (site in sites) {
+            var path = sites[site]._path.segments
+            var coordinates = await getCoordinates(path);
+            console.log("Coordinates for site: " + coordinates)
+            // Calling the weather API for that location
+            var data = await getWeatherData(weatherAPIKey, coordinates, date);
+            console.log("++++++++++++++++++")
+            console.log(data)
+            console.log("++++++++++++++++++")
+            // TODO: Call function to populate document with rainfall data
+        }
         // Then use getWeatherData() for each site's coordinates
     }
     
-    var date = "2021-01-22";
-    var location = "30.26534,-81.43901";
-    var data = await getWeatherData(weatherAPIKey, location, date);
-    response.send(data);
+    response.send("OK");
 });
+
+function getCoordinates(path) {
+    var siteData = db.doc(path.join("/"));
+        return siteData.get().then((data) => {
+            var latitude = data.data().coordinates._latitude;
+            var longitude = data.data().coordinates._longitude;
+            coordinates = latitude + "," + longitude;
+            console.log(coordinates);
+            return coordinates;
+        }).catch((err) => {
+            console.error("Failed grabbing coords", err);
+        });
+}
 
 function getRegions() {
     var regionsReference = db.collection("regions").doc("list");
@@ -61,16 +86,17 @@ function getSites(region) {
 
 // Grab weather data everyday and store in our own database
 // TODO: Is it necessary to store our data or can we call from the external API everytime?
-function getWeatherData(weatherAPIKey, siteLocation, date) {
-    const requestUrl = "https://api.weatherapi.com/v1/history.json?key=" + weatherAPIKey + "&q=" + siteLocation + "&dt=" + date;
+function getWeatherData(weatherAPIKey, coordinates, date) {
+    const requestUrl = "https://api.weatherapi.com/v1/history.json?key=" + weatherAPIKey + "&q=" + coordinates + "&dt=" + date;
 
     // Fetch data from requestUrl
     return fetch(requestUrl).then((response) => {
         return response.json();
     }).then((data) => {
-        console.log(data);
-        console.log("Total precip: " + data.forecast.forecastday[0].day.totalprecip_in);
-        return data;
+        //console.log(data);
+        totalPrecip = data.forecast.forecastday[0].day.totalprecip_in
+        //console.log("Total precip: " + data.forecast.forecastday[0].day.totalprecip_in);
+        return totalPrecip;
     }).catch((error) => {
         console.error("Problem fetching weather: ", error);
     });
