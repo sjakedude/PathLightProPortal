@@ -1,67 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-	<script src="https://unpkg.com/vue"></script>
+    <script src="https://unpkg.com/vue"></script>
     <link rel="stylesheet" href="css/styles.css" media="screen">
     <meta charset="UTF-8">
+
+    <!-- Firebase -->
+    <script defer src="/__/firebase/8.2.4/firebase-app.js"></script>
+    <script defer src="/__/firebase/8.2.4/firebase-firestore.js"></script>
+    <script defer src="/__/firebase/8.2.4/firebase-functions.js"></script>
+    <script defer src="/__/firebase/8.2.4/firebase-storage.js"></script>
+    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+
     <title>Path Light Pro</title>
 </head>
+
 <body>
-<header>
-    <!-- Title of the page -->
-    <h1>Path Light Pro - Employee Portal</h1>
-</header>
-<header>
-    <!-- Brief description of the page's contents -->
-    <p>Bla Bla Bla</p>
-</header>
-<nav>
-    <ul>
-        <!-- Navigation to the rest of the pages on my website -->
-        <li><a href="index.html">Home</a></li>
-        <li><a href="truck_restoration.html"></a></li>
-        <li><a href="rainlog.html">Rain Log</a></li>
-    </ul>
-</nav>
-<hr>
-<section>
-    <label for="employees">Employee:</label>
-    <select name="employees" id="employees">
-        <option value="sloane">Sloane</option>
-        <option value="adam">Adam</option>
-        <option value="sarah">Sarah</option>
-        <option value="ginny">Ginny</option>
-    </select>
-    <br><br>
-    <input type="button" value="Submit" onclick="populateTable()">
-	<script src="rainLog.js"></script>
-</section>
-<article>
-    <br>
-    <div id="app">
-	<table>
-		<tr>
-			<th>Site</th>
-			<th>1/13/2021</th>
-			<th>1/14/2021</th>
-			<th>1/15/2021</th>
-		</tr>
-     <tr v-for="row in teamRows" :key="row.team">
-       <td>{{ row.team }}</td>
-       <td v-for="time in row.times">{{ time }}</td>
-     </tr>
-	</table>
-    </div>
-    <script src="rainLog.js"></script>
-	
-</article>
-<footer>
+    <header>
+        <!-- Title of the page -->
+        <h1>Path Light Pro - Employee Portal</h1>
+    </header>
+    <nav>
+        <ul>
+            <!-- Navigation to the rest of the pages on my website -->
+            <li><a href="index.html">Home</a></li>
+            <li><a href="rainlog.html">Rain Log</a></li>
+        </ul>
+    </nav>
     <hr>
-    <p>
-        <!-- Ending credits -->
-        Written by Jake Stephens. 2021
-    </p>
-</footer>
+    <section>
+        <label for="employees">Employee:</label>
+        <select name="employees" id="employees">
+            <option value="sloane">Sloane</option>
+            <option value="adam">Adam</option>
+            <option value="sarah">Sarah</option>
+            <option value="ginny">Ginny</option>
+        </select>
+        <br><br>
+        <input type="button" value="Submit" onclick="populateTable()">
+        <script defer src="rainLog.js"></script>
+    </section>
+    <article>
+        <br>
+        <div id="app">
+            <table>
+                <tr>
+                    <th>Site</th>
+                    <th>1/13/2021</th>
+                    <th>1/14/2021</th>
+                    <th>1/15/2021</th>
+                </tr>
+                <tr v-for="row in teamRows" :key="row.team">
+                    <td>{{ row.team }}</td>
+                    <td v-for="time in row.times">{{ time }}</td>
+                </tr>
+            </table>
+        </div>
+        <script src="rainLog.js"></script>
+
+    </article>
+    <footer>
+        <hr>
+        <p>
+            <!-- Ending credits -->
+            Written by Jake Stephens. 2021
+        </p>
+    </footer>
 </body>
+
 </html>
