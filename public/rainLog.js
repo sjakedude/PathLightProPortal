@@ -16,24 +16,30 @@ getCurrentMonthWeather();
 async function getCurrentMonthWeather() {
 
   var date = new Date();
-  var month =  ("0" + date.getMonth()).slice(-2);
+  var month = ("0" + date.getMonth() + 1).slice(-2);
   // Date
   var day = ("0" + date.getDate()).slice(-2);
 
   var userDropdown = document.getElementById("employees");
   var user = userDropdown.options[userDropdown.selectedIndex].text.toLowerCase();
-  var sites = await getUserSites(user);
-  console.log(sites[0]);
-  for (site in sites) {
-    var path = sites[site]._path.segments
-    console.log(path);
-    var siteData = db.doc(path).get().then((data) => {
-      return data.data();
+  await getUserSites(user).then((sites) => {
+    sites.forEach(async (value, index) => {
+      var path = value.path;
+      console.log("Reading site data from document " + path);
+      await db.doc(path).get().then((data) => {
+        siteData = data.data();
+        console.log(siteData);
+        var monthArrayString = "precip_" + month;
+        var daysMap = siteData[monthArrayString];
+        var todayPrecip = daysMap[day];
+        console.log("Today's precip at " + siteData.name + ": " + todayPrecip);
+        document.getElementById("todayPrecip").innerHTML = "Today's precip at " + siteData.name + ": " + todayPrecip;
+        //return data.data();
+      });
+
     });
-    var daysMap = siteData["precip_" + month];
-    var todayPrecip = daysMap[day];
-    console.log("Today's precip at " + siteData.name + ": " + todayPrecip);
-  }
+  });
+
 }
 
 function getUserSites(user) {
