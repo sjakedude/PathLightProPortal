@@ -15,10 +15,12 @@ getCurrentMonthWeather();
 
 async function getCurrentMonthWeather() {
 
+
   var date = new Date();
   var month = ("0" + date.getMonth() + 1).slice(-2);
   // Date
   var day = ("0" + date.getDate()).slice(-2);
+  var year = date.getFullYear();
 
   var userDropdown = document.getElementById("employees");
   var user = userDropdown.options[userDropdown.selectedIndex].text.toLowerCase();
@@ -29,12 +31,9 @@ async function getCurrentMonthWeather() {
       await db.doc(path).get().then((data) => {
         siteData = data.data();
         console.log(siteData);
-        var monthArrayString = "precip_" + month;
-        var daysMap = siteData[monthArrayString];
-        var todayPrecip = daysMap[day];
-        console.log("Today's precip at " + siteData.name + ": " + todayPrecip);
-        document.getElementById("todayPrecip").innerHTML = "Today's precip at " + siteData.name + ": " + todayPrecip;
-        //return data.data();
+
+        // Insert data into HTML
+        insertTableData(siteData, month, year);
       });
 
     });
@@ -50,4 +49,72 @@ function getUserSites(user) {
     console.log(userData);
     return userData.sites;
   });
+}
+
+function insertTableData(siteData, month, year) {
+  const parentDiv = document.getElementById("precipTable");
+
+  var siteName = siteData.name;
+  var siteTitle = document.createElement("h3");
+  siteTitle.innerHTML = siteName;
+  parentDiv.appendChild(siteTitle)
+
+  var currentTable = parentDiv.appendChild(document.createElement("table"));
+
+  // Weekly Day Header
+  // TODO: Put into loop and add style (e.g. bold)
+  var dayRow = currentTable.insertRow();
+  dayRow.insertCell().innerHTML = "Sunday";
+  dayRow.insertCell().innerHTML = "Monday";
+  dayRow.insertCell().innerHTML = "Tuesday";
+  dayRow.insertCell().innerHTML = "Wednesday";
+  dayRow.insertCell().innerHTML = "Thursday";
+  dayRow.insertCell().innerHTML = "Friday";
+  dayRow.insertCell().innerHTML = "Saturday";
+
+  // Create row for date and row underneath for data
+  var headerRow = currentTable.insertRow();
+  var currentRow = currentTable.insertRow();
+
+  var monthArrayString = "precip_" + month;
+  // Map of precip for each day
+  var monthlyPrecip = siteData[monthArrayString];
+  // Get number of days in the month
+  var daysInCurrentMonth = new Date(year, month, 0).getDate();
+  // Get day of week of the first day of the month
+  var firstDayOfMonth = new Date(year, (month - 1), 1).getDay();
+  // Insert cells to offset calendar to account for first day not being on Sunday
+  for (var w = 0; w < firstDayOfMonth; w++) {
+    headerRow.insertCell();
+    currentRow.insertCell();
+  }
+
+  // For each day in the month fill in a value
+  for (var i = 1; i <= daysInCurrentMonth; i++) {
+    // Multiples of 7 should be on a new line, starting from day of week (w)
+    if ((i != 1) && w % 7 == 0) {
+      headerRow = currentTable.insertRow();
+      currentRow = currentTable.insertRow();
+    }
+
+    // Insert date header
+    var headerCell = headerRow.insertCell();
+    headerCell.innerHTML = month + "/" + i + "/" + year;
+
+    // Default null (-) value unless data is found
+    var currentDayPrecip = "-"
+    if (monthlyPrecip != undefined) {
+      currentDayPrecip = monthlyPrecip[i];
+      if (currentDayPrecip == undefined)
+        currentDayPrecip = "-"
+    }
+    var dataCell = currentRow.insertCell()
+    dataCell.innerHTML = currentDayPrecip;
+
+    // Enable highlighting of data cells
+    dataCell.onclick = function () {
+      this.style.backgroundColor = "yellow";
+    }
+    w++;
+  }
 }
