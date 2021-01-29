@@ -54,11 +54,20 @@ function getUserSites(user) {
 function insertTableData(siteData, month, year) {
   const parentDiv = document.getElementById("precipTable");
 
+  // Add title of month
+  var monthString = new Date(year, month).toLocaleString('default', { month: 'long' });
+  var monthTitle = document.createElement("h2");
+  monthTitle.innerHTML = monthString;
+  parentDiv.appendChild(monthTitle);
+  monthTitle.style.textAlign = "center";
+
+  // Title of site above each table
   var siteName = siteData.name;
   var siteTitle = document.createElement("h3");
   siteTitle.innerHTML = siteName;
   parentDiv.appendChild(siteTitle)
 
+  // Create table
   var currentTable = parentDiv.appendChild(document.createElement("table"));
 
   // Weekly Day Header
@@ -71,6 +80,9 @@ function insertTableData(siteData, month, year) {
   dayRow.insertCell().innerHTML = "Thursday";
   dayRow.insertCell().innerHTML = "Friday";
   dayRow.insertCell().innerHTML = "Saturday";
+
+  dayRow.style.backgroundColor = "#007cba";
+  dayRow.style.color = "white";
 
   // Create row for date and row underneath for data
   var headerRow = currentTable.insertRow();
