@@ -52,17 +52,17 @@ exports.populateWeather = functions.https.onRequest(async (request, response) =>
             console.log("Precipitation: " + data)
 
             // Updating the firestore with yesterday's precipitation data
-            updateWeatherData(path, data)
+            updateWeatherData(path, data, month, day)
         }
     }
-    
+
     // If all is good, send response
     response.send("OK");
 });
 
-function updateWeatherData(path, data) {
+function updateWeatherData(path, data, month, day) {
     var siteData = db.doc(path.join("/"));
-    siteData.update({"precip_01.27": data})
+    siteData.update({"precip_" + month + "." + day: data})
 }
 
 function getSiteInfo(path) {
