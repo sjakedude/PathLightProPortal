@@ -55,7 +55,7 @@ function insertTableData(siteData, month, year) {
   const parentDiv = document.getElementById("precipTable");
 
   // Add title of month
-  var monthString = new Date(year, month).toLocaleString('default', { month: 'long' });
+  var monthString = new Date(year, (month-1)).toLocaleString('default', { month: 'long' });
   var monthTitle = document.createElement("h2");
   monthTitle.innerHTML = monthString;
   parentDiv.appendChild(monthTitle);
