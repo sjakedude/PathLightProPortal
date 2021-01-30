@@ -22,7 +22,7 @@ exports.populateWeather = functions.https.onRequest(async (request, response) =>
     var dateObject = new Date();
     var year = dateObject.getFullYear();
     var month = ("0" + dateObject.getMonth() + 1).slice(-2); // Months are 0-11 so we +1
-    var day = 22;//(("0" + dateObject.getDate()) - 1).toString().slice(-2); // Days are 1-31 but we -1 to get yesterday's data
+    var day = (("0" + dateObject.getDate()) - 1).toString().slice(-2); // Days are 1-31 but we -1 to get yesterday's data
     var date = year + "-" + month + "-" + day;
     console.log("Date: " + date);
 
@@ -46,12 +46,12 @@ exports.populateWeather = functions.https.onRequest(async (request, response) =>
             var latitude = siteInfo.data().coordinates._latitude;
             var longitude = siteInfo.data().coordinates._longitude;
             var coordinates = latitude + "," + longitude;
-            //console.log("=======\n" + "Site: " + siteName + "\nCoordinates: " + coordinates);
+            console.log("=======\n" + "Site: " + siteName + "\nCoordinates: " + coordinates);
 
             // Calling the weather API for that location
             var data = await getWeatherData(weatherAPIKey, coordinates, date);
             var totalPrecip = data.forecast.forecastday[0].day.totalprecip_in;
-            //console.log("Total Precipitation: " + totalPrecip)
+            console.log("Total Precipitation: " + totalPrecip)
             var hourlyPrecip = getHourlyPrecip(data);
 
             // Updating the firestore with yesterday's precipitation data
