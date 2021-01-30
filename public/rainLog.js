@@ -19,7 +19,7 @@ async function getCurrentMonthWeather() {
   var date = new Date();
   var month = ("0" + date.getMonth() + 1).slice(-2);
   // Date
-  var day = ("0" + date.getDate()).slice(-2);
+
   var year = date.getFullYear();
 
   var userDropdown = document.getElementById("employees");
@@ -55,11 +55,13 @@ function insertTableData(siteData, month, year) {
   const parentDiv = document.getElementById("precipTable");
 
   // Add title of month
+  /** 
   var monthString = new Date(year, (month-1)).toLocaleString('default', { month: 'long' });
   var monthTitle = document.createElement("h2");
   monthTitle.innerHTML = monthString;
   parentDiv.appendChild(monthTitle);
   monthTitle.style.textAlign = "center";
+  */
 
   // Title of site above each table
   var siteName = siteData.name;
@@ -87,6 +89,8 @@ function insertTableData(siteData, month, year) {
   // Create row for date and row underneath for data
   var headerRow = currentTable.insertRow();
   var currentRow = currentTable.insertRow();
+  headerRow.style.display = "none";
+  currentRow.style.display = "none";
 
   var monthArrayString = "precip_" + month;
   // Map of precip for each day
@@ -96,7 +100,7 @@ function insertTableData(siteData, month, year) {
   // Get day of week of the first day of the month
   var firstDayOfMonth = new Date(year, (month - 1), 1).getDay();
   // Insert cells to offset calendar to account for first day not being on Sunday
-  for (var w = 0; w < firstDayOfMonth; w++) {
+  for (var offset = 0; offset < firstDayOfMonth; offset++) {
     headerRow.insertCell();
     currentRow.insertCell();
   }
@@ -104,9 +108,18 @@ function insertTableData(siteData, month, year) {
   // For each day in the month fill in a value
   for (var i = 1; i <= daysInCurrentMonth; i++) {
     // Multiples of 7 should be on a new line, starting from day of week (w)
-    if ((i != 1) && w % 7 == 0) {
+    if ((i != 1) && offset % 7 == 0) {
       headerRow = currentTable.insertRow();
       currentRow = currentTable.insertRow();
+      // Hide all rows by default, except current week
+      headerRow.style.display = "none";
+      currentRow.style.display = "none";
+    }
+
+    // Display current week
+    if ((i == (new Date().getDate()))) {
+      headerRow.style.display = "table-row";
+      currentRow.style.display = "table-row";
     }
 
     // Insert date header
@@ -127,6 +140,10 @@ function insertTableData(siteData, month, year) {
     dataCell.onclick = function () {
       this.style.backgroundColor = "yellow";
     }
-    w++;
+    offset++;
   }
+}
+
+function displayWholeMonth(table) {
+
 }
