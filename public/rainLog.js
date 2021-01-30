@@ -75,7 +75,30 @@ function insertTableData(siteData, month, year) {
   var currentDate = new Date();
   displayLast7Days(currentDate, currentTable, siteData);
 
+  // TODO: Add button to display whole month
+  var displayMonthButton = document.createElement("button");
+  displayMonthButton.innerHTML = "Show Month";
+  parentDiv.appendChild(displayMonthButton);
+  displayMonthButton.onclick = function () {
+    clearTable(currentTable);
+    displayMonth(currentDate, currentTable, siteData);
+  }
+
   /** 
+  
+  */
+}
+
+function clearTable(table) {
+  while (table.firstChild) {
+    table.removeChild(table.firstChild);
+  }
+}
+
+//TODO: Add button to display whole month
+function displayMonth(currentDate, currentTable, siteData) {
+  var month = ("0" + currentDate.getMonth() + 1).slice(-2);
+  var year = currentDate.getFullYear();
   // Weekly Day Header
   // TODO: Put into loop and add style (e.g. bold)
   var dayRow = currentTable.insertRow();
@@ -109,7 +132,7 @@ function insertTableData(siteData, month, year) {
     currentRow.insertCell();
   }
 
-  
+
 
   // For each day in the month fill in a value
   for (var i = 1; i <= daysInCurrentMonth; i++) {
@@ -118,15 +141,19 @@ function insertTableData(siteData, month, year) {
       headerRow = currentTable.insertRow();
       currentRow = currentTable.insertRow();
       // Hide all rows by default, except current week
+      /** 
       headerRow.style.display = "none";
       currentRow.style.display = "none";
+      */
     }
 
     // Display current week
-    if (i == currentDate) {
+    /** 
+    if (i == currentDate.getDate()) {
       headerRow.style.display = "table-row";
       currentRow.style.display = "table-row";
     }
+    */
 
     // Insert date header
     var headerCell = headerRow.insertCell();
@@ -148,12 +175,6 @@ function insertTableData(siteData, month, year) {
     }
     offset++;
   }
-  */
-}
-
-//TODO: Add button to display whole month
-function displayWholeMonth(table) {
-
 }
 
 // TODO: Display previous months data if within last 7 days
@@ -162,22 +183,21 @@ function displayLast7Days(date, table, siteData) {
   var monthArrayString = "precip_" + ("0" + date.getMonth() + 1).slice(-2);
   // Map of precip for each day
   var monthlyPrecip = siteData[monthArrayString];
-  console.log("monthlyPrecip: " + monthlyPrecip);
 
   var dateRow = table.insertRow();
   var precipRow = table.insertRow();
 
   // Get 7 days before
   var earliestDate = new Date();
-  earliestDate.setDate(date.getDate()-7);
-  
+  earliestDate.setDate(date.getDate() - 7);
+
   var index = 0; // Number of loops
   // Loop through dates between 7 days prior and current date
   for (var i = earliestDate.getDate(); i < date.getDate(); i++) {
     var runningDate = new Date();
-    runningDate.setDate(earliestDate.getDate()+index);
+    runningDate.setDate(earliestDate.getDate() + index);
     var dateCell = dateRow.insertCell();
-    dateCell.innerHTML = (runningDate.getMonth()+1) + "/" + runningDate.getDate();
+    dateCell.innerHTML = (runningDate.getMonth() + 1) + "/" + runningDate.getDate();
 
     // Add hourly view when clicking dateCell
     // dateCell.onclick = function () {}
@@ -191,7 +211,7 @@ function displayLast7Days(date, table, siteData) {
     }
     var precipCell = precipRow.insertCell()
     precipCell.innerHTML = currentDayPrecip;
-  
+
     // Enable highlighting of data cells
     precipCell.onclick = function () {
       this.style.backgroundColor = "yellow";
