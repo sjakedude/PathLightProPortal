@@ -21,9 +21,10 @@ exports.populateWeather = functions.https.onRequest(async (request, response) =>
     // Getting the date into the correct format
     var dateObject = new Date();
     var year = dateObject.getFullYear();
-    var month = ("0" + dateObject.getMonth() + 1).slice(-2);
-    var day = (("0" + dateObject.getDate()) - 1).toString().slice(-2);
+    var month = ("0" + dateObject.getMonth() + 1).slice(-2); // Months are 0-11 so we +1
+    var day = (("0" + dateObject.getDate()) - 1).toString().slice(-2); // Days are 1-31 but we -1 to get yesterday's data
     var date = year + "-" + month + "-" + day;
+    console.log("Date: " + date);
 
     // Getting all regions (currently only st johns)
     var regions = await getRegions();
@@ -62,7 +63,8 @@ exports.populateWeather = functions.https.onRequest(async (request, response) =>
 
 function updateWeatherData(path, data, month, day) {
     var siteData = db.doc(path.join("/"));
-    siteData.update({"precip_" + month + "." + day: data})
+    var dataPath = "precip_" + month + "." + day;
+    siteData.update({[dataPath]: data})
 }
 
 function getSiteInfo(path) {
