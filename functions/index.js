@@ -22,7 +22,7 @@ exports.populateWeather = functions.https.onRequest(async (request, response) =>
     var dateObject = new Date();
     var year = dateObject.getFullYear();
     var month = ("0" + dateObject.getMonth() + 1).slice(-2); // Months are 0-11 so we +1
-    var day = (("0" + dateObject.getDate()) - 1).toString().slice(-2); // Days are 1-31 but we -1 to get yesterday's data
+    var day = 22;//(("0" + dateObject.getDate()) - 1).toString().slice(-2); // Days are 1-31 but we -1 to get yesterday's data
     var date = year + "-" + month + "-" + day;
     console.log("Date: " + date);
 
@@ -46,14 +46,17 @@ exports.populateWeather = functions.https.onRequest(async (request, response) =>
             var latitude = siteInfo.data().coordinates._latitude;
             var longitude = siteInfo.data().coordinates._longitude;
             var coordinates = latitude + "," + longitude;
-            console.log("=======\n" + "Site: " + siteName + "\nCoordinates: " + coordinates);
+            //console.log("=======\n" + "Site: " + siteName + "\nCoordinates: " + coordinates);
 
             // Calling the weather API for that location
             var data = await getWeatherData(weatherAPIKey, coordinates, date);
-            console.log("Precipitation: " + data)
+            var totalPrecip = data.forecast.forecastday[0].day.totalprecip_in;
+            //console.log("Total Precipitation: " + totalPrecip)
+            var hourlyPrecip = getHourlyPrecip(data);
 
             // Updating the firestore with yesterday's precipitation data
-            updateWeatherData(path, data, month, day)
+            updateTotalPrecip(path, totalPrecip, month, day)
+            updateHourlyPrecip(path, hourlyPrecip, date);
         }
     }
 
@@ -61,10 +64,17 @@ exports.populateWeather = functions.https.onRequest(async (request, response) =>
     response.send("OK");
 });
 
-function updateWeatherData(path, data, month, day) {
+function updateHourlyPrecip(path, hourlyPrecip, date) {
+    console.log("IN UPDATE HOURLY");
+    var siteData = db.doc(path.join("/") + "/hourly/" + date);
+    console.log(hourlyPrecip);
+    siteData.set({precip: hourlyPrecip}, {merge: true});
+}
+
+function updateTotalPrecip(path, totalPrecip, month, day) {
     var siteData = db.doc(path.join("/"));
     var dataPath = "precip_" + month + "." + day;
-    siteData.update({[dataPath]: data})
+    siteData.update({[dataPath]: totalPrecip})
 }
 
 function getSiteInfo(path) {
@@ -80,7 +90,6 @@ function getRegions() {
     var regionsReference = db.collection("regions").doc("list");
     return regionsReference.get().then((data) => {
         var regionsArray = data.data();
-        console.log(regionsArray);
         return regionsArray;
     }).catch((err) => {
         console.error("Failed to get regions list", err);
@@ -106,9 +115,20 @@ function getWeatherData(weatherAPIKey, coordinates, date) {
     return fetch(requestUrl).then((response) => {
         return response.json();
     }).then((data) => {
-        totalPrecip = data.forecast.forecastday[0].day.totalprecip_in
-        return totalPrecip;
+        return data;
     }).catch((error) => {
         console.error("Problem fetching weather", error);
     });
+}
+
+// Function to retrieving the hourly precipitation and returning an array of the values
+// indexed 0-23 (for all 24 hours in a day)
+function getHourlyPrecip(data) {
+    var hours = data.forecast.forecastday[0].hour;
+    var hourlyPrecip = [];
+    for (hour in hours) {
+        var precip = hours[hour].precip_in;
+        hourlyPrecip.push(precip);
+    }
+    return hourlyPrecip;
 }
