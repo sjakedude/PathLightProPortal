@@ -72,6 +72,10 @@ function insertTableData(siteData, month, year) {
   // Create table
   var currentTable = parentDiv.appendChild(document.createElement("table"));
 
+  var currentDate = new Date();
+  displayLast7Days(currentDate, currentTable, siteData);
+
+  /** 
   // Weekly Day Header
   // TODO: Put into loop and add style (e.g. bold)
   var dayRow = currentTable.insertRow();
@@ -105,6 +109,8 @@ function insertTableData(siteData, month, year) {
     currentRow.insertCell();
   }
 
+  
+
   // For each day in the month fill in a value
   for (var i = 1; i <= daysInCurrentMonth; i++) {
     // Multiples of 7 should be on a new line, starting from day of week (w)
@@ -117,7 +123,7 @@ function insertTableData(siteData, month, year) {
     }
 
     // Display current week
-    if ((i == (new Date().getDate()))) {
+    if (i == currentDate) {
       headerRow.style.display = "table-row";
       currentRow.style.display = "table-row";
     }
@@ -142,8 +148,54 @@ function insertTableData(siteData, month, year) {
     }
     offset++;
   }
+  */
 }
 
+//TODO: Add button to display whole month
 function displayWholeMonth(table) {
 
+}
+
+// TODO: Display previous months data if within last 7 days
+function displayLast7Days(date, table, siteData) {
+  // Get precip data from site
+  var monthArrayString = "precip_" + ("0" + date.getMonth() + 1).slice(-2);
+  // Map of precip for each day
+  var monthlyPrecip = siteData[monthArrayString];
+  console.log("monthlyPrecip: " + monthlyPrecip);
+
+  var dateRow = table.insertRow();
+  var precipRow = table.insertRow();
+
+  // Get 7 days before
+  var earliestDate = new Date();
+  earliestDate.setDate(date.getDate()-7);
+  
+  var index = 0; // Number of loops
+  // Loop through dates between 7 days prior and current date
+  for (var i = earliestDate.getDate(); i < date.getDate(); i++) {
+    var runningDate = new Date();
+    runningDate.setDate(earliestDate.getDate()+index);
+    var dateCell = dateRow.insertCell();
+    dateCell.innerHTML = (runningDate.getMonth()+1) + "/" + runningDate.getDate();
+
+    // Add hourly view when clicking dateCell
+    // dateCell.onclick = function () {}
+
+    // TODO: Get data from prior months too
+    var currentDayPrecip = "-"
+    if (monthlyPrecip != undefined) {
+      currentDayPrecip = monthlyPrecip[i];
+      if (currentDayPrecip == undefined)
+        currentDayPrecip = "-"
+    }
+    var precipCell = precipRow.insertCell()
+    precipCell.innerHTML = currentDayPrecip;
+  
+    // Enable highlighting of data cells
+    precipCell.onclick = function () {
+      this.style.backgroundColor = "yellow";
+    }
+    index++;
+  }
 }
