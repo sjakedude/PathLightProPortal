@@ -11,9 +11,8 @@ admin.initializeApp();
 const db = admin.firestore();
 const cityRef = db.collection('cities').doc('BJ');
 
-
 // Main method
-exports.populateWeather = functions.https.onRequest(async (request, response) => {
+exports.populateWeather = functions.pubsub.schedule('0 1 * * *').timeZone('America/New_York').onRun((context) => {
 
     // API key for weather app
     const weatherAPIKey = "a77d00cf8cb244f4801195048211101";
@@ -59,9 +58,6 @@ exports.populateWeather = functions.https.onRequest(async (request, response) =>
             updateHourlyPrecip(path, hourlyPrecip, date);
         }
     }
-
-    // If all is good, send response
-    response.send("OK");
 });
 
 function updateHourlyPrecip(path, hourlyPrecip, date) {
