@@ -22,6 +22,48 @@
         <!-- Title of the page -->
         <h1>Path Light Pro - Employee Portal</h1>
     </header>
+    <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+          <span class="close">&times;</span>
+          <script>
+            window.onload = function () {
+            
+            var chart = new CanvasJS.Chart("chartContainer", {
+                animationEnabled: true,
+                theme: "light2", // "light1", "light2", "dark1", "dark2"
+                title:{
+                    text: "Top Oil Reserves"
+                },
+                axisY: {
+                    title: "Percipitation"
+                },
+                data: [{        
+                    type: "column",  
+                    showInLegend: true, 
+                    legendMarkerColor: "grey",
+                    legendText: "Hour by hour",
+                    dataPoints: [      
+                        { y: 1, label: "12:00 am" },
+                        { y: 1,  label: "1:00 am" },
+                        { y: 3,  label: "2:00 am" },
+                        { y: 2,  label: "3:00 am" },
+                        { y: 2,  label: "4:00 am" },
+                        { y: 1, label: "5:00 am" },
+                        { y: 2,  label: "6:00 am" },
+                        { y: 1,  label: "7:00 am" }
+                    ]
+                }]
+            });
+            chart.render();
+            }
+            </script>
+          <div id="chartContainer" style="height: 300px; width: 100%;"></div>
+          <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+        </div>
+      
+    </div>
     <nav>
         <ul>
             <!-- Navigation to the rest of the pages on my website -->

@@ -9,6 +9,12 @@ new Vue({
   }
 });
 
+// Popup window vars
+var modal = document.getElementById("myModal");
+var span = document.getElementsByClassName("close")[0];
+span.onclick = function() {
+  modal.style.display = "none";
+}
 
 var db = firebase.firestore();
 getCurrentMonthWeather();
@@ -171,6 +177,12 @@ function displayMonth(currentDate, currentTable, siteData, moreButton) {
     // Enable highlighting of data cells
     dataCell.onclick = function () {
       this.style.backgroundColor = "yellow";
+    }
+
+    // Enable popup of hourly data
+    headerCell.onclick = function () {
+      this.style.backgroundColor = "green";
+      modal.style.display = "block";
     }
 
     moreButton.onclick = function () {
