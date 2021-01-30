@@ -58,29 +58,29 @@ function insertTableData(siteData, month, year) {
   var siteName = siteData.name;
   var siteTitle = document.createElement("h3");
   siteTitle.innerHTML = siteName;
-  parentDiv.appendChild(siteTitle)
+  parentDiv.appendChild(siteTitle);
+
+  // Create table wrapper div
+  var tableDiv = document.createElement("div");
+  parentDiv.appendChild(tableDiv);
+
+  // Table Title
+  var tableTitle = document.createElement("h2");
+  tableTitle.style.textAlign = "center";
+  tableTitle.className = "table-title";
+  tableDiv.appendChild(tableTitle);
 
   // Create table
   var currentTable = document.createElement("table");
-  var tableDiv = document.createElement("div");
   tableDiv.appendChild(currentTable);
-  parentDiv.appendChild(tableDiv);
+
+  // Button to change table display
+  var moreButton = document.createElement("button");
+  moreButton.innerHTML = "Show Month";
+  parentDiv.appendChild(moreButton);
 
   var currentDate = new Date();
-  displayLast7Days(currentDate, currentTable, siteData);
-
-  // TODO: Add button to display whole month
-  var displayMonthButton = document.createElement("button");
-  displayMonthButton.innerHTML = "Show Month";
-  parentDiv.appendChild(displayMonthButton);
-  displayMonthButton.onclick = function () {
-    clearTable(currentTable);
-    displayMonth(currentDate, currentTable, siteData);
-  }
-
-  /** 
-  
-  */
+  displayLast7Days(currentDate, currentTable, siteData, moreButton);
 }
 
 function clearTable(table) {
@@ -89,17 +89,15 @@ function clearTable(table) {
   }
 }
 
-//TODO: Add button to display whole month
-function displayMonth(currentDate, currentTable, siteData) {
+//TODO: Reset button functionality
+function displayMonth(currentDate, currentTable, siteData, moreButton) {
   var month = ("0" + currentDate.getMonth() + 1).slice(-2);
   var year = currentDate.getFullYear();
 
   // Add title of month
   var monthString = currentDate.toLocaleString('default', { month: 'long' });
-  var monthTitle = document.createElement("h2");
+  var monthTitle = currentTable.parentElement.getElementsByClassName("table-title")[0];
   monthTitle.innerHTML = monthString;
-  currentTable.parentNode.insertBefore(monthTitle, currentTable);
-  monthTitle.style.textAlign = "center";
 
   // Weekly Day Header
   // TODO: Put into loop and add style (e.g. bold)
@@ -174,12 +172,21 @@ function displayMonth(currentDate, currentTable, siteData) {
     dataCell.onclick = function () {
       this.style.backgroundColor = "yellow";
     }
+
+    moreButton.onclick = function () {
+      monthTitle.innerHTML = "";
+      clearTable(currentTable);
+      displayLast7Days(currentDate, currentTable, siteData, moreButton);
+      moreButton.innerHTML = "Show Month";
+    }
+
     offset++;
   }
 }
 
 // TODO: Display previous months data if within last 7 days
-function displayLast7Days(date, table, siteData) {
+function displayLast7Days(date, table, siteData, moreButton) {
+
   // Get precip data from site
   var monthArrayString = "precip_" + ("0" + date.getMonth() + 1).slice(-2);
   // Map of precip for each day
@@ -217,6 +224,13 @@ function displayLast7Days(date, table, siteData) {
     precipCell.onclick = function () {
       this.style.backgroundColor = "yellow";
     }
+
+    moreButton.onclick = function () {
+      clearTable(table);
+      displayMonth(date, table, siteData, moreButton);
+      moreButton.innerHTML = "Show Recent";
+    }
+
     index++;
   }
 }
