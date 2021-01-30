@@ -54,15 +54,6 @@ function getUserSites(user) {
 function insertTableData(siteData, month, year) {
   const parentDiv = document.getElementById("precipTable");
 
-  // Add title of month
-  /** 
-  var monthString = new Date(year, (month-1)).toLocaleString('default', { month: 'long' });
-  var monthTitle = document.createElement("h2");
-  monthTitle.innerHTML = monthString;
-  parentDiv.appendChild(monthTitle);
-  monthTitle.style.textAlign = "center";
-  */
-
   // Title of site above each table
   var siteName = siteData.name;
   var siteTitle = document.createElement("h3");
@@ -70,7 +61,10 @@ function insertTableData(siteData, month, year) {
   parentDiv.appendChild(siteTitle)
 
   // Create table
-  var currentTable = parentDiv.appendChild(document.createElement("table"));
+  var currentTable = document.createElement("table");
+  var tableDiv = document.createElement("div");
+  tableDiv.appendChild(currentTable);
+  parentDiv.appendChild(tableDiv);
 
   var currentDate = new Date();
   displayLast7Days(currentDate, currentTable, siteData);
@@ -99,6 +93,14 @@ function clearTable(table) {
 function displayMonth(currentDate, currentTable, siteData) {
   var month = ("0" + currentDate.getMonth() + 1).slice(-2);
   var year = currentDate.getFullYear();
+
+  // Add title of month
+  var monthString = currentDate.toLocaleString('default', { month: 'long' });
+  var monthTitle = document.createElement("h2");
+  monthTitle.innerHTML = monthString;
+  currentTable.parentNode.insertBefore(monthTitle, currentTable);
+  monthTitle.style.textAlign = "center";
+
   // Weekly Day Header
   // TODO: Put into loop and add style (e.g. bold)
   var dayRow = currentTable.insertRow();
@@ -116,8 +118,6 @@ function displayMonth(currentDate, currentTable, siteData) {
   // Create row for date and row underneath for data
   var headerRow = currentTable.insertRow();
   var currentRow = currentTable.insertRow();
-  headerRow.style.display = "none";
-  currentRow.style.display = "none";
 
   var monthArrayString = "precip_" + month;
   // Map of precip for each day
@@ -157,7 +157,8 @@ function displayMonth(currentDate, currentTable, siteData) {
 
     // Insert date header
     var headerCell = headerRow.insertCell();
-    headerCell.innerHTML = month + "/" + i + "/" + year;
+    headerCell.style.textAlign = "center";
+    headerCell.innerHTML = i;
 
     // Default null (-) value unless data is found
     var currentDayPrecip = "-"
