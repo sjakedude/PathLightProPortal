@@ -1,8 +1,18 @@
-window.onload = function () {
-            
+console.log("IN BAR GRAPH");
 
-    var rainDataArray = [0.1, 0.0, 0.3, 0.2, 0.3, 0.0];
+async function displayGraph(rainDataArray, date1) {
+    
+    console.log("IN FUNCTION");
+    var path = "sites/2nv8sEuK2WU9amUxHMvu/hourly/" + date1;
+    console.log("Reading site data from document " + path);
+    await db.doc(path).get().then((data) => {
+          siteData1 = data.data();
+          //console.log(siteData1);
+          rainDataArray = siteData1;
+    });
+    console.log(rainDataArray);
 
+    console.log("About to populate chart");
     var chart = new CanvasJS.Chart("chartContainer", {
         width: 1000,
         animationEnabled: true,
@@ -16,33 +26,33 @@ window.onload = function () {
         data: [{        
             type: "column",  
             showInLegend: true, 
-            legendMarkerColor: "grey",
-            legendText: "Hour by hour",
+            legendMarkerColor: "white",
+            legendText: " ",
             dataPoints: [      
-                { y: rainDataArray[0], label: "12:00 am" },
-                { y: rainDataArray[1],  label: "1:00 am" },
-                { y: rainDataArray[2],  label: "2:00 am" },
-                { y: rainDataArray[3],  label: "3:00 am" },
-                { y: rainDataArray[4],  label: "4:00 am" },
-                { y: rainDataArray[5],  label: "5:00 am" },
-                { y: .2,  label: "6:00 am" },
-                { y: .1,  label: "7:00 am" },
-                { y: .2,  label: "8:00 am" },
-                { y: .2,  label: "9:00 am" },
-                { y: .2,  label: "10:00 am" },
-                { y: .2,  label: "11:00 am" },
-                { y: .2,  label: "12:00 pm" },
-                { y: .2,  label: "1:00 pm" },
-                { y: .2,  label: "6:00 pm" },
-                { y: .2,  label: "3:00 pm" },
-                { y: .2,  label: "4:00 pm" },
-                { y: .2,  label: "5:00 pm" },
-                { y: .2,  label: "6:00 pm" },
-                { y: .2,  label: "7:00 pm" },
-                { y: .2,  label: "8:00 pm" },
-                { y: .2,  label: "9:00 pm" },
-                { y: .2,  label: "10:00 pm" },
-                { y: .2,  label: "11:00 pm" }
+                { y: rainDataArray["precip"][0], label: "12:00 am" },
+                { y: rainDataArray["precip"][1],  label: "1:00 am" },
+                { y: rainDataArray["precip"][2],  label: "2:00 am" },
+                { y: rainDataArray["precip"][3],  label: "3:00 am" },
+                { y: rainDataArray["precip"][4],  label: "4:00 am" },
+                { y: rainDataArray["precip"][5],  label: "5:00 am" },
+                { y: rainDataArray["precip"][6],  label: "6:00 am" },
+                { y: rainDataArray["precip"][7],  label: "7:00 am" },
+                { y: rainDataArray["precip"][8],  label: "8:00 am" },
+                { y: rainDataArray["precip"][9],  label: "9:00 am" },
+                { y: rainDataArray["precip"][10],  label: "10:00 am" },
+                { y: rainDataArray["precip"][11],  label: "11:00 am" },
+                { y: rainDataArray["precip"][12],  label: "12:00 pm" },
+                { y: rainDataArray["precip"][13],  label: "1:00 pm" },
+                { y: rainDataArray["precip"][14],  label: "6:00 pm" },
+                { y: rainDataArray["precip"][15],  label: "3:00 pm" },
+                { y: rainDataArray["precip"][16],  label: "4:00 pm" },
+                { y: rainDataArray["precip"][17],  label: "5:00 pm" },
+                { y: rainDataArray["precip"][18],  label: "6:00 pm" },
+                { y: rainDataArray["precip"][19],  label: "7:00 pm" },
+                { y: rainDataArray["precip"][20],  label: "8:00 pm" },
+                { y: rainDataArray["precip"][21],  label: "9:00 pm" },
+                { y: rainDataArray["precip"][22],  label: "10:00 pm" },
+                { y: rainDataArray["precip"][23],  label: "11:00 pm" }
             ]
         }]
     });

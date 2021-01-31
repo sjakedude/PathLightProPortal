@@ -10,6 +10,7 @@ new Vue({
 });
 
 // Popup window vars
+var rainDataArray = [];
 var modal = document.getElementById("myModal");
 var span = document.getElementsByClassName("close")[0];
 span.onclick = function() {
@@ -182,7 +183,15 @@ function displayMonth(currentDate, currentTable, siteData, moreButton) {
     // Enable popup of hourly data
     headerCell.onclick = function () {
       this.style.backgroundColor = "green";
+      var dateObject1 = new Date();
+      var year1 = dateObject1.getFullYear();
+      var month1 = ("0" + dateObject1.getMonth() + 1).slice(-2); // Months are 0-11 so we +1
+      var date1 = year1 + "-" + month1 + "-" + this.innerHTML;
+      
       modal.style.display = "block";
+      console.log("HEADER CELL: " + this.innerHTML);
+      displayGraph(rainDataArray, date1);
+      rainDataArray = null;
     }
 
     moreButton.onclick = function () {
