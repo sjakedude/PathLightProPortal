@@ -18,6 +18,20 @@ tr:nth-child(even) {
   background-color: #dddddd;
 }
 
+.table-title-div {
+  display: flex;
+  margin: auto;
+}
+
+.table-title {
+  max-width: 25%;
+}
+
+.month-arrow {
+  margin: auto;
+  cursor: pointer;
+}
+
 .modal {
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
