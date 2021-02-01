@@ -25,7 +25,7 @@ async function getCurrentMonthWeather() {
 
 
   var date = new Date();
-  var month = ("0" + date.getMonth() + 1).slice(-2);
+  var month = ("0" + (date.getMonth() + 1)).slice(-2);
   // Date
 
   var year = date.getFullYear();
@@ -73,10 +73,27 @@ function insertTableData(siteData, month, year) {
   parentDiv.appendChild(tableDiv);
 
   // Table Title
+  var titleDiv = document.createElement("div");
+  titleDiv.className = "table-title-div";
+
+  var leftArrow = document.createElement("span");
+  leftArrow.innerHTML = "<";
+  leftArrow.style.display = "none";
+  leftArrow.className = "month-arrow";
+  titleDiv.appendChild(leftArrow);
+
   var tableTitle = document.createElement("h2");
   tableTitle.style.textAlign = "center";
   tableTitle.className = "table-title";
-  tableDiv.appendChild(tableTitle);
+  titleDiv.appendChild(tableTitle);
+
+  var rightArrow = document.createElement("span");
+  rightArrow.innerHTML = ">";
+  rightArrow.style.display = "none";
+  rightArrow.className = "month-arrow";
+  titleDiv.appendChild(rightArrow);
+
+  tableDiv.appendChild(titleDiv);
 
   // Create table
   var currentTable = document.createElement("table");
@@ -97,15 +114,47 @@ function clearTable(table) {
   }
 }
 
-//TODO: Reset button functionality
+//TODO: Add year dropdown selector
 function displayMonth(currentDate, currentTable, siteData, moreButton) {
-  var month = ("0" + currentDate.getMonth() + 1).slice(-2);
+  var month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
   var year = currentDate.getFullYear();
 
-  // Add title of month
+  // Add title of month  
   var monthString = currentDate.toLocaleString('default', { month: 'long' });
   var monthTitle = currentTable.parentElement.getElementsByClassName("table-title")[0];
+  var monthTitleWrapper = monthTitle.parentElement;
+  
+  var previousDate = new Date();
+  previousDate.setDate(1);
+  previousDate.setMonth(currentDate.getMonth()-1);
+
+  var nextDate = new Date();
+  nextDate.setDate(1);
+  nextDate.setMonth(currentDate.getMonth()+1);
+
   monthTitle.innerHTML = monthString;
+  var leftArrow = monthTitleWrapper.getElementsByClassName("month-arrow")[0];
+  leftArrow.style.display = "flex";
+  if (previousDate.getFullYear() < 2021) {
+    leftArrow.innerHTML = "";
+  } else {
+    leftArrow.innerHTML = "<"
+  }
+  var rightArrow = monthTitleWrapper.getElementsByClassName("month-arrow")[1];
+  rightArrow.style.display = "flex";
+
+  // Go to previous month
+  leftArrow.onclick = function () {
+    clearTable(currentTable);
+    displayMonth(previousDate, currentTable, siteData, moreButton);
+  }
+
+  // Go to next month
+  rightArrow.onclick = function () {
+    clearTable(currentTable);
+    displayMonth(nextDate, currentTable, siteData, moreButton);
+  }
+
 
   // Weekly Day Header
   // TODO: Put into loop and add style (e.g. bold)
@@ -187,7 +236,7 @@ function displayMonth(currentDate, currentTable, siteData, moreButton) {
       // Getting correct date
       var date = new Date();
       var hourlyYear = date.getFullYear();
-      var hourlyMonth = ("0" + date.getMonth() + 1).slice(-2); // Months are 0-11 so we +1
+      var hourlyMonth = ("0" + (date.getMonth() + 1)).slice(-2); // Months are 0-11 so we +1
       var hourlyDate = hourlyYear + "-" + hourlyMonth + "-" + this.innerHTML;
       
       // Getting the path to the site
@@ -200,7 +249,7 @@ function displayMonth(currentDate, currentTable, siteData, moreButton) {
     }
 
     moreButton.onclick = function () {
-      monthTitle.innerHTML = "";
+      monthTitleWrapper.style.display = "none";
       clearTable(currentTable);
       displayLast7Days(currentDate, currentTable, siteData, moreButton);
       moreButton.innerHTML = "Show Month";
@@ -214,7 +263,8 @@ function displayMonth(currentDate, currentTable, siteData, moreButton) {
 function displayLast7Days(date, table, siteData, moreButton) {
 
   // Get precip data from site
-  var monthArrayString = "precip_" + ("0" + date.getMonth() + 1).slice(-2);
+  var monthArrayString = "precip_" + ("0" + (date.getMonth() + 1)).slice(-2);
+
   // Map of precip for each day
   var monthlyPrecip = siteData[monthArrayString];
 
