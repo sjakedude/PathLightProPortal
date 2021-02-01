@@ -10,7 +10,6 @@ new Vue({
 });
 
 // Popup window vars
-var rainDataArray = [];
 var modal = document.getElementById("myModal");
 var span = document.getElementsByClassName("close")[0];
 span.onclick = function() {
@@ -195,10 +194,7 @@ function displayMonth(currentDate, currentTable, siteData, moreButton) {
 
       // Displaying the graph
       modal.style.display = "block";
-      displayGraph(rainDataArray, hourlyPath, hourlyDate);
-
-      // Restting the rainDataArray to be empty
-      rainDataArray = null;
+      displayGraph(hourlyPath, hourlyDate);
     }
 
     moreButton.onclick = function () {
@@ -251,6 +247,25 @@ function displayLast7Days(date, table, siteData, moreButton) {
     // Enable highlighting of data cells
     precipCell.onclick = function () {
       this.style.backgroundColor = "yellow";
+    }
+
+    // Enable drilldown to hour by hour
+    dateCell.onclick = function () {
+      
+      // Getting correct date
+      var date = new Date();
+      var hourlyYear = date.getFullYear();
+      var hourlyMonth = ("0" + date.getMonth() + 1).slice(-2); // Months are 0-11 so we +1
+      var hourlyDay = ("0" + this.innerHTML.split("/")[1]).slice(-2);
+      var hourlyDate = hourlyYear + "-" + hourlyMonth + "-" + hourlyDay;
+      
+      // Getting the path to the site
+      // TODO: Change this to be automated
+      var hourlyPath = "sites/2nv8sEuK2WU9amUxHMvu";
+
+      // Displaying the graph
+      modal.style.display = "block";
+      displayGraph(hourlyPath, hourlyDate);
     }
 
     moreButton.onclick = function () {
