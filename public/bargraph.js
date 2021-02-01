@@ -1,13 +1,9 @@
-console.log("IN BAR GRAPH");
-
-async function displayGraph(rainDataArray, date1) {
+async function displayGraph(rainDataArray, hourlyPath, hourlyDate) {
     
-    console.log("IN FUNCTION");
-    var path = "sites/2nv8sEuK2WU9amUxHMvu/hourly/" + date1;
-    console.log("Reading site data from document " + path);
-    await db.doc(path).get().then((data) => {
+    var hourlyFullPath = hourlyPath + "/hourly/" + hourlyDate;
+    console.log("Reading site data from document " + hourlyFullPath);
+    await db.doc(hourlyFullPath).get().then((data) => {
           siteData1 = data.data();
-          //console.log(siteData1);
           rainDataArray = siteData1;
     });
     console.log(rainDataArray);
