@@ -25,6 +25,7 @@ async function getCurrentMonthWeather() {
 
 
   var date = new Date();
+  // Add 1 since .getMonth returns 0-11
   var month = ("0" + (date.getMonth() + 1)).slice(-2);
   // Date
 
@@ -59,6 +60,7 @@ function getUserSites(user) {
   });
 }
 
+// TODO: Migrate from month, year to a Date Object
 function insertTableData(siteData, month, year) {
   const parentDiv = document.getElementById("precipTable");
 
@@ -261,9 +263,13 @@ function displayMonth(currentDate, currentTable, siteData, moreButton) {
 
 // TODO: Display previous months data if within last 7 days
 function displayLast7Days(date, table, siteData, moreButton) {
-
+  const last7Days = 7;
   // Get precip data from site
   var monthArrayString = "precip_" + ("0" + (date.getMonth() + 1)).slice(-2);
+  if (date.getDate() < last7Days) {
+    // Get previous month data
+    
+  }
 
   // Map of precip for each day
   var monthlyPrecip = siteData[monthArrayString];
@@ -273,11 +279,11 @@ function displayLast7Days(date, table, siteData, moreButton) {
 
   // Get 7 days before
   var earliestDate = new Date();
-  earliestDate.setDate(date.getDate() - 7);
+  earliestDate.setDate(date.getDate() - last7Days);
 
   var index = 0; // Number of loops
   // Loop through dates between 7 days prior and current date
-  for (var i = earliestDate.getDate(); i < date.getDate(); i++) {
+  for (var i = earliestDate.getDate(); i < date.getDate() || earliestDate.getMonth() != date.getMonth() || index >= 7; i++) {
     var runningDate = new Date();
     runningDate.setDate(earliestDate.getDate() + index);
     var dateCell = dateRow.insertCell();
