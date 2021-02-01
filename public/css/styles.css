@@ -37,21 +37,6 @@ tr:nth-child(even) {
   width: 80%;
 }
 
-/* The Close Button */
-.close {
-  color: #aaaaaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-  color: #000;
-  text-decoration: none;
-  cursor: pointer;
-}
-
 .graph-cont{
   width: 100%;
   max-width: 300px;
