@@ -287,14 +287,14 @@ function displayLast7Days(date, table, siteData, moreButton, path) {
     // Previous month
     if (runningDate.getDate() > date.getDate()) {
       if (previousMonthPrecip != undefined) {
-        currentDayPrecip = previousMonthPrecip[runningDate.getDate()];
+        currentDayPrecip = previousMonthPrecip[("0" + runningDate.getDate()).slice(-2)];
         if (currentDayPrecip == undefined) {
           currentDayPrecip = "-";
         }
       }
     } else {
       if (monthlyPrecip != undefined) {
-        currentDayPrecip = monthlyPrecip[runningDate.getDate()];
+        currentDayPrecip = monthlyPrecip[("0" + runningDate.getDate()).slice(-2)];
         if (currentDayPrecip == undefined) {
           currentDayPrecip = "-";
         }
