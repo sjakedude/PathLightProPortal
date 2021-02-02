@@ -41,7 +41,7 @@ async function getCurrentMonthWeather() {
         console.log(siteData);
 
         // Insert data into HTML
-        insertTableData(siteData, month, year);
+        insertTableData(siteData, month, year, path);
       });
 
     });
@@ -59,7 +59,7 @@ function getUserSites(user) {
   });
 }
 
-function insertTableData(siteData, month, year) {
+function insertTableData(siteData, month, year, path) {
   const parentDiv = document.getElementById("precipTable");
 
   // Title of site above each table
@@ -105,7 +105,7 @@ function insertTableData(siteData, month, year) {
   parentDiv.appendChild(moreButton);
 
   var currentDate = new Date();
-  displayLast7Days(currentDate, currentTable, siteData, moreButton);
+  displayLast7Days(currentDate, currentTable, siteData, moreButton, path);
 }
 
 function clearTable(table) {
@@ -115,7 +115,7 @@ function clearTable(table) {
 }
 
 //TODO: Add year dropdown selector
-function displayMonth(currentDate, currentTable, siteData, moreButton) {
+function displayMonth(currentDate, currentTable, siteData, moreButton, path) {
   var month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
   var year = currentDate.getFullYear();
 
@@ -148,13 +148,13 @@ function displayMonth(currentDate, currentTable, siteData, moreButton) {
   // Go to previous month
   leftArrow.onclick = function () {
     clearTable(currentTable);
-    displayMonth(previousDate, currentTable, siteData, moreButton);
+    displayMonth(previousDate, currentTable, siteData, moreButton, path);
   }
 
   // Go to next month
   rightArrow.onclick = function () {
     clearTable(currentTable);
-    displayMonth(nextDate, currentTable, siteData, moreButton);
+    displayMonth(nextDate, currentTable, siteData, moreButton, path);
   }
 
 
@@ -232,19 +232,15 @@ function displayMonth(currentDate, currentTable, siteData, moreButton) {
       var hourlyMonth = ("0" + (currentDate.getMonth() + 1)).slice(-2); // Months are 0-11 so we +1
       var hourlyDate = hourlyYear + "-" + hourlyMonth + "-" + this.innerHTML;
       
-      // Getting the path to the site
-      // TODO: Change this to be automated
-      var hourlyPath = "sites/2nv8sEuK2WU9amUxHMvu";
-
       // Displaying the graph
       modal.style.display = "block";
-      displayGraph(hourlyPath, hourlyDate);
+      displayGraph(path, hourlyDate);
     }
 
     moreButton.onclick = function () {
       monthTitleWrapper.style.display = "none";
       clearTable(currentTable);
-      displayLast7Days((new Date()), currentTable, siteData, moreButton);
+      displayLast7Days((new Date()), currentTable, siteData, moreButton, path);
       moreButton.innerHTML = "Show Month";
     }
 
@@ -253,7 +249,7 @@ function displayMonth(currentDate, currentTable, siteData, moreButton) {
 }
 
 // TODO: Display previous months data if within last 7 days
-function displayLast7Days(date, table, siteData, moreButton) {
+function displayLast7Days(date, table, siteData, moreButton, path) {
   const last7Days = 7;
 
   // Get precip data from site
@@ -322,18 +318,14 @@ function displayLast7Days(date, table, siteData, moreButton) {
       var hourlyDay = ("0" + this.innerHTML.split("/")[1]).slice(-2);
       var hourlyDate = hourlyYear + "-" + hourlyMonth + "-" + hourlyDay;
       
-      // Getting the path to the site
-      // TODO: Change this to be automated
-      var hourlyPath = "sites/2nv8sEuK2WU9amUxHMvu";
-
       // Displaying the graph
       modal.style.display = "block";
-      displayGraph(hourlyPath, hourlyDate);
+      displayGraph(path, hourlyDate);
     }
 
     moreButton.onclick = function () {
       clearTable(table);
-      displayMonth(date, table, siteData, moreButton);
+      displayMonth(date, table, siteData, moreButton, path);
       moreButton.innerHTML = "Show Recent";
     }
 
