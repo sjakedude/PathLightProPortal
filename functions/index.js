@@ -19,9 +19,10 @@ exports.populateWeather = functions.pubsub.schedule('0 1 * * *').timeZone('Ameri
 
     // Getting the date into the correct format
     var dateObject = new Date();
+    dateObject.setDate(dateObject.getDate() - 1);
     var year = dateObject.getFullYear();
-    var month = ("0" + dateObject.getMonth() + 1).slice(-2); // Months are 0-11 so we +1
-    var day = (("0" + dateObject.getDate()) - 1).toString().slice(-2); // Days are 1-31 but we -1 to get yesterday's data
+    var month = ("0" + (dateObject.getMonth() + 1)).slice(-2); // Months are 0-11 so we +1
+    var day = ("0" + dateObject.getDate()).slice(-2); // Days are 1-31 but we -1 to get yesterday's data
     var date = year + "-" + month + "-" + day;
     console.log("Date: " + date);
 
