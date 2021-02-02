@@ -9,6 +9,7 @@ table {
 }
 
 td, th {
+  cursor: pointer;
   border: 1px solid #dddddd;
   text-align: left;
   padding: 8px;
@@ -16,6 +17,10 @@ td, th {
 
 tr:nth-child(even) {
   background-color: #ffffff;
+}
+
+tr:first-child {
+  background-color: #007cba;
 }
 
 .table-title-div {
@@ -121,4 +126,28 @@ code {
   padding: 5px;
   background: #ecf0f1;
   display: block;
+}
+
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+nav ul li {
+  float: left;
+}
+
+nav ul li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+nav ul li a:hover {
+  background-color: #111;
 }
