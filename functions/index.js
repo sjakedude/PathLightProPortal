@@ -12,6 +12,7 @@ const db = admin.firestore();
 const cityRef = db.collection('cities').doc('BJ');
 
 // Main method
+//exports.populateWeather = functions.https.onRequest(async (request, response) => {
 exports.populateWeather = functions.pubsub.schedule('0 1 * * *').timeZone('America/New_York').onRun(async (context) => {
 
     // API key for weather app
@@ -59,6 +60,7 @@ exports.populateWeather = functions.pubsub.schedule('0 1 * * *').timeZone('Ameri
             updateHourlyPrecip(path, hourlyPrecip, date);
         }
     }
+    //response.send("OK"); // Uncomment for testing
 });
 
 function updateHourlyPrecip(path, hourlyPrecip, date) {
