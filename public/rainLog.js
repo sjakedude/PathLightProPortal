@@ -227,9 +227,9 @@ function displayMonth(currentDate, currentTable, siteData, moreButton) {
     headerCell.onclick = function () {
       
       // Getting correct date
-      var date = new Date();
-      var hourlyYear = date.getFullYear();
-      var hourlyMonth = ("0" + (date.getMonth() + 1)).slice(-2); // Months are 0-11 so we +1
+      //var date = new Date();
+      var hourlyYear = currentDate.getFullYear();
+      var hourlyMonth = ("0" + (currentDate.getMonth() + 1)).slice(-2); // Months are 0-11 so we +1
       var hourlyDate = hourlyYear + "-" + hourlyMonth + "-" + this.innerHTML;
       
       // Getting the path to the site
@@ -277,8 +277,10 @@ function displayLast7Days(date, table, siteData, moreButton) {
   // Loop through dates between 7 days prior and current date
   for (var i = 0; i < last7Days; i++) {
     var runningDate = new Date();
+
     runningDate.setMonth(earliestDate.getMonth());
     runningDate.setDate(earliestDate.getDate() + i);
+    
     var dateCell = dateRow.insertCell();
     dateCell.innerHTML = (runningDate.getMonth()+1) + "/" + runningDate.getDate();
 
@@ -314,9 +316,9 @@ function displayLast7Days(date, table, siteData, moreButton) {
     dateCell.onclick = function () {
       
       // Getting correct date
-      var date = new Date();
-      var hourlyYear = date.getFullYear();
-      var hourlyMonth = ("0" + date.getMonth() + 1).slice(-2); // Months are 0-11 so we +1
+      //var date = new Date();
+      var hourlyYear = runningDate.getFullYear();
+      var hourlyMonth = ("0" + this.innerHTML.split("/")[0]).slice(-2); // Months are 0-11 so we +1
       var hourlyDay = ("0" + this.innerHTML.split("/")[1]).slice(-2);
       var hourlyDate = hourlyYear + "-" + hourlyMonth + "-" + hourlyDay;
       
