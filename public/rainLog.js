@@ -261,6 +261,7 @@ function displayMonth(currentDate, currentTable, siteData, moreButton) {
 
 // TODO: Display previous months data if within last 7 days
 function displayLast7Days(date, table, siteData, moreButton) {
+  const last7Days = 7;
 
   // Get precip data from site
   var monthArrayString = "precip_" + ("0" + (date.getMonth() + 1)).slice(-2);
