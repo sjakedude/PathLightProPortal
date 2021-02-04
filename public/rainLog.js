@@ -123,16 +123,18 @@ function displayMonth(currentDate, currentTable, siteData, moreButton) {
   var monthString = currentDate.toLocaleString('default', { month: 'long' });
   var monthTitle = currentTable.parentElement.getElementsByClassName("table-title")[0];
   var monthTitleWrapper = monthTitle.parentElement;
+  monthTitleWrapper.style.display = "flex";
   
   var previousDate = new Date();
-  previousDate.setDate(1);
+  //previousDate.setDate(1);
   previousDate.setMonth(currentDate.getMonth()-1);
 
   var nextDate = new Date();
-  nextDate.setDate(1);
+  //nextDate.setDate(1);
   nextDate.setMonth(currentDate.getMonth()+1);
 
   monthTitle.innerHTML = monthString;
+ 
   var leftArrow = monthTitleWrapper.getElementsByClassName("month-arrow")[0];
   leftArrow.style.display = "flex";
   if (previousDate.getFullYear() < 2021) {
@@ -177,6 +179,8 @@ function displayMonth(currentDate, currentTable, siteData, moreButton) {
   var monthArrayString = "precip_" + month;
   // Map of precip for each day
   var monthlyPrecip = siteData[monthArrayString];
+
+
   // Get number of days in the month
   var daysInCurrentMonth = new Date(year, month, 0).getDate();
   // Get day of week of the first day of the month
@@ -195,21 +199,7 @@ function displayMonth(currentDate, currentTable, siteData, moreButton) {
     if ((i != 1) && offset % 7 == 0) {
       headerRow = currentTable.insertRow();
       currentRow = currentTable.insertRow();
-      // Hide all rows by default, except current week
-      /** 
-      headerRow.style.display = "none";
-      currentRow.style.display = "none";
-      */
     }
-
-    // Display current week
-    /** 
-    if (i == currentDate.getDate()) {
-      headerRow.style.display = "table-row";
-      currentRow.style.display = "table-row";
-    }
-    */
-
     // Insert date header
     var headerCell = headerRow.insertCell();
     headerCell.style.textAlign = "center";
@@ -218,11 +208,14 @@ function displayMonth(currentDate, currentTable, siteData, moreButton) {
     // Default null (-) value unless data is found
     var currentDayPrecip = "-"
     if (monthlyPrecip != undefined) {
-      currentDayPrecip = monthlyPrecip[i];
-      if (currentDayPrecip == undefined)
-        currentDayPrecip = "-"
+      var formattedDate = ("0"+i).slice(-2);
+      console.log("format: " + formattedDate);
+      currentDayPrecip = monthlyPrecip[formattedDate];
+      if (currentDayPrecip == undefined) {
+        currentDayPrecip = "-";
+      }
     }
-    var dataCell = currentRow.insertCell()
+    var dataCell = currentRow.insertCell();
     dataCell.innerHTML = currentDayPrecip;
 
     // Enable highlighting of data cells
@@ -251,7 +244,7 @@ function displayMonth(currentDate, currentTable, siteData, moreButton) {
     moreButton.onclick = function () {
       monthTitleWrapper.style.display = "none";
       clearTable(currentTable);
-      displayLast7Days(currentDate, currentTable, siteData, moreButton);
+      displayLast7Days((new Date()), currentTable, siteData, moreButton);
       moreButton.innerHTML = "Show Month";
     }
 
@@ -297,14 +290,16 @@ function displayLast7Days(date, table, siteData, moreButton) {
     if (runningDate.getDate() > date.getDate()) {
       if (previousMonthPrecip != undefined) {
         currentDayPrecip = previousMonthPrecip[runningDate.getDate()];
-        if (currentDayPrecip == undefined)
+        if (currentDayPrecip == undefined) {
           currentDayPrecip = "-";
+        }
       }
     } else {
       if (monthlyPrecip != undefined) {
         currentDayPrecip = monthlyPrecip[runningDate.getDate()];
-        if (currentDayPrecip == undefined)
+        if (currentDayPrecip == undefined) {
           currentDayPrecip = "-";
+        }
       }
     }
     var precipCell = precipRow.insertCell()
