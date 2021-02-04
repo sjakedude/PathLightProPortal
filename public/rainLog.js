@@ -264,9 +264,12 @@ function displayLast7Days(date, table, siteData, moreButton) {
 
   // Get precip data from site
   var monthArrayString = "precip_" + ("0" + (date.getMonth() + 1)).slice(-2);
-
+  var previousMonthArrayString ="precip_" + ("0" + date.getMonth()).slice(-2);
+  console.log("previous: " + previousMonthArrayString);
   // Map of precip for each day
   var monthlyPrecip = siteData[monthArrayString];
+  var previousMonthPrecip = siteData[previousMonthArrayString];
+
 
   var dateRow = table.insertRow();
   var precipRow = table.insertRow();
@@ -276,22 +279,32 @@ function displayLast7Days(date, table, siteData, moreButton) {
   earliestDate.setDate(date.getDate() - 7);
 
   var index = 0; // Number of loops
+  
   // Loop through dates between 7 days prior and current date
-  for (var i = earliestDate.getDate(); i < date.getDate(); i++) {
+  for (var i = 0; i < last7Days; i++) {
     var runningDate = new Date();
-    runningDate.setDate(earliestDate.getDate() + index);
+    runningDate.setMonth(earliestDate.getMonth());
+    runningDate.setDate(earliestDate.getDate() + i);
     var dateCell = dateRow.insertCell();
-    dateCell.innerHTML = (runningDate.getMonth() + 1) + "/" + runningDate.getDate();
+    dateCell.innerHTML = (runningDate.getMonth()+1) + "/" + runningDate.getDate();
 
-    // Add hourly view when clicking dateCell
-    // dateCell.onclick = function () {}
+    console.log("running date: " + runningDate.getDate());
 
     // TODO: Get data from prior months too
     var currentDayPrecip = "-"
-    if (monthlyPrecip != undefined) {
-      currentDayPrecip = monthlyPrecip[i];
-      if (currentDayPrecip == undefined)
-        currentDayPrecip = "-"
+    // Previous month
+    if (runningDate.getDate() > date.getDate()) {
+      if (previousMonthPrecip != undefined) {
+        currentDayPrecip = previousMonthPrecip[runningDate.getDate()];
+        if (currentDayPrecip == undefined)
+          currentDayPrecip = "-";
+      }
+    } else {
+      if (monthlyPrecip != undefined) {
+        currentDayPrecip = monthlyPrecip[runningDate.getDate()];
+        if (currentDayPrecip == undefined)
+          currentDayPrecip = "-";
+      }
     }
     var precipCell = precipRow.insertCell()
     precipCell.innerHTML = currentDayPrecip;
