@@ -114,6 +114,10 @@ function clearTable(table) {
   }
 }
 
+function populateTable() {
+  console.log("HELLO JAKE!!!!!");
+}
+
 //TODO: Add year dropdown selector
 function displayMonth(currentDate, currentTable, siteData, moreButton, path) {
   var month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
